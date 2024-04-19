@@ -15,5 +15,5 @@ This project is a simple demonstration of a blink program running on an ATMEGA32
 - Capacitor
 - 9V battery with a voltage regulator to output 5V (for powering the circuit)
 
-## Circuit Diagram
-![Circuit Diagram](images/schematic.png)
+## Hand-Drawn Schematic
+![Schematic](images/schematic.png)
