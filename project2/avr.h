@@ -2,7 +2,7 @@
  * avr.h
  *
  * Created: 4/26/2024 12:24:11 PM
- *  Author: jibri
+ *  Author: Chan Young Ji & Joel Akiyoshi
  */ 
 #ifndef _AVR_H
 #define _AVR_H

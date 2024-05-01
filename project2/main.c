@@ -6,6 +6,7 @@
  */ 
 
 #include "avr.h"
+#include "keypad.h"
 
 void
 avr_init(void)
@@ -24,5 +25,19 @@ avr_wait(unsigned short msec)
 		while (!GET_BIT(TIFR, TOV0));
 	}
 	TCCR0 = 0;
+}
+
+main()
+{
+	for (;;)
+	{
+		avr_wait(1000);
+		int k = 0;
+		k = get_key();
+		if (!k)
+		{
+			SET_BIT(PORTB, 0);
+		}
+	}
 }
 
