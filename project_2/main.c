@@ -29,15 +29,13 @@ avr_wait(unsigned short msec)
 
 main()
 {
-	for (;;)
+	int k = is_pressed(0,0);  // test, just to see if row 0, col 0 works
+
+	while(k)  // blink if press is detected
 	{
-		avr_wait(1000);
-		int k = 0;
-		k = get_key();
-		if (!k)
-		{
-			SET_BIT(PORTB, 0);
-		}
+	    SET_BIT(PORTB, 0);
+	    avr_wait(250);
+	    CLR_BIT(PORTB, 0);
+	    avr_wait(250);
 	}
 }
-
