@@ -5,6 +5,8 @@
  * Author : Chan Young Ji & Joel Akiyoshi
  */ 
 
+// testing git branch with a comment
+
 #include "avr.h"
 #include "keypad.h"
 
