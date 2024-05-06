@@ -7,6 +7,7 @@
 #include "avr.h"
 #include "lcd.h"
 
+
 #define DDR    DDRB
 #define PORT   PORTB
 #define RS_PIN 0

@@ -9,6 +9,11 @@
 
 #include "avr.h"
 #include "keypad.h"
+#include "lcd.h"
+
+#include <avr/io.h>
+#include <stdio.h>
+#include <stdbool.h>
 
 void
 avr_init(void)
@@ -31,18 +36,18 @@ avr_wait(unsigned short msec)
 
 main()
 {
-	DDRB = 0x01;  // set PORTB to output at B0
-    for (;;)
+	lcd_init();
+	lcd_clr();
+	
+	int r, c;
+	char a = '0';
+	for (r = 0; r < 2; r++) 
 	{
-		avr_wait(1000);
-		int i, k;
-		k = get_key();
-		for(i = 0; i < k; ++i)
+		for (c = 0; c < 16; c++)
 		{
-		    SET_BIT(PORTB, 0);
-			avr_wait(500);
-			CLR_BIT(PORTB, 0);
-			avr_wait(500);
+			lcd_pos(r, c);
+			lcd_put(a);
+			avr_wait(100);
 		}
 	}
 }
