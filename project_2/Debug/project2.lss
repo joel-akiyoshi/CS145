@@ -3,29 +3,29 @@ project2.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         0000010a  00000000  00000000  00000054  2**1
+  0 .text         0000017c  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000000  00800060  00800060  0000015e  2**0
+  1 .data         00000000  00800060  00800060  000001d0  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .comment      00000030  00000000  00000000  0000015e  2**0
+  2 .comment      00000030  00000000  00000000  000001d0  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000190  2**2
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000200  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000058  00000000  00000000  000001cc  2**0
+  4 .debug_aranges 00000058  00000000  00000000  0000023c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00000734  00000000  00000000  00000224  2**0
+  5 .debug_info   00000742  00000000  00000000  00000294  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 0000062b  00000000  00000000  00000958  2**0
+  6 .debug_abbrev 00000646  00000000  00000000  000009d6  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000376  00000000  00000000  00000f83  2**0
+  7 .debug_line   00000393  00000000  00000000  0000101c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  000000a0  00000000  00000000  000012fc  2**2
+  8 .debug_frame  0000008c  00000000  00000000  000013b0  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    0000033f  00000000  00000000  0000139c  2**0
+  9 .debug_str    0000033f  00000000  00000000  0000143c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    000001ad  00000000  00000000  000016db  2**0
+ 10 .debug_loc    0000014c  00000000  00000000  0000177b  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000038  00000000  00000000  00001888  2**0
+ 11 .debug_ranges 00000038  00000000  00000000  000018c7  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -60,8 +60,8 @@ Disassembly of section .text:
   5a:	d8 e0       	ldi	r29, 0x08	; 8
   5c:	de bf       	out	0x3e, r29	; 62
   5e:	cd bf       	out	0x3d, r28	; 61
-  60:	0e 94 5c 00 	call	0xb8	; 0xb8 <main>
-  64:	0c 94 83 00 	jmp	0x106	; 0x106 <_exit>
+  60:	0e 94 9d 00 	call	0x13a	; 0x13a <main>
+  64:	0c 94 bc 00 	jmp	0x178	; 0x178 <_exit>
 
 00000068 <__bad_interrupt>:
   68:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -71,145 +71,235 @@ Disassembly of section .text:
 
 int is_pressed(int r, int c)
 {
-	// set all 8 GPIO's to N/C
+	// set all GPIO to 0
 	DDRC = 0;
   6c:	14 ba       	out	0x14, r1	; 20
 	PORTC = 0;
   6e:	15 ba       	out	0x15, r1	; 21
+
+    SET_BIT(DDRC, r);  // set row pin to OUTPUT
+  70:	44 b3       	in	r20, 0x14	; 20
+  72:	21 e0       	ldi	r18, 0x01	; 1
+  74:	30 e0       	ldi	r19, 0x00	; 0
+  76:	f9 01       	movw	r30, r18
+  78:	02 c0       	rjmp	.+4      	; 0x7e <is_pressed+0x12>
+  7a:	ee 0f       	add	r30, r30
+  7c:	ff 1f       	adc	r31, r31
+  7e:	8a 95       	dec	r24
+  80:	e2 f7       	brpl	.-8      	; 0x7a <is_pressed+0xe>
+  82:	cf 01       	movw	r24, r30
+  84:	4e 2b       	or	r20, r30
+  86:	44 bb       	out	0x14, r20	; 20
+	CLR_BIT(PORTC, r);  // write a '0' to PORTC at r
+  88:	95 b3       	in	r25, 0x15	; 21
+  8a:	80 95       	com	r24
+  8c:	89 23       	and	r24, r25
+  8e:	85 bb       	out	0x15, r24	; 21
+
+	SET_BIT(PORTC, c + 4);  // pull up GPIO at col c
+  90:	85 b3       	in	r24, 0x15	; 21
+  92:	6c 5f       	subi	r22, 0xFC	; 252
+  94:	7f 4f       	sbci	r23, 0xFF	; 255
+  96:	06 2e       	mov	r0, r22
+  98:	02 c0       	rjmp	.+4      	; 0x9e <is_pressed+0x32>
+  9a:	22 0f       	add	r18, r18
+  9c:	33 1f       	adc	r19, r19
+  9e:	0a 94       	dec	r0
+  a0:	e2 f7       	brpl	.-8      	; 0x9a <is_pressed+0x2e>
+  a2:	28 2b       	or	r18, r24
+  a4:	25 bb       	out	0x15, r18	; 21
 	
-    SET_BIT(PORTC, c + 4);  // col c value to w1 (not actually pulling up)
-  70:	25 b3       	in	r18, 0x15	; 21
-  72:	6c 5f       	subi	r22, 0xFC	; 252
-  74:	7f 4f       	sbci	r23, 0xFF	; 255
-  76:	81 e0       	ldi	r24, 0x01	; 1
-  78:	90 e0       	ldi	r25, 0x00	; 0
-  7a:	02 c0       	rjmp	.+4      	; 0x80 <is_pressed+0x14>
-  7c:	88 0f       	add	r24, r24
-  7e:	99 1f       	adc	r25, r25
-  80:	6a 95       	dec	r22
-  82:	e2 f7       	brpl	.-8      	; 0x7c <is_pressed+0x10>
-  84:	82 2b       	or	r24, r18
-  86:	85 bb       	out	0x15, r24	; 21
-	return GET_BIT(PINC, 4);
-  88:	83 b3       	in	r24, 0x13	; 19
-  8a:	80 71       	andi	r24, 0x10	; 16
-	if (!GET_BIT(PINC, (c + 4)))
+	if (!GET_BIT(PINC, c + 4))  // check to see if PINC is zero at col c
+  a6:	83 b3       	in	r24, 0x13	; 19
+  a8:	90 e0       	ldi	r25, 0x00	; 0
+  aa:	02 c0       	rjmp	.+4      	; 0xb0 <is_pressed+0x44>
+  ac:	95 95       	asr	r25
+  ae:	87 95       	ror	r24
+  b0:	6a 95       	dec	r22
+  b2:	e2 f7       	brpl	.-8      	; 0xac <is_pressed+0x40>
+  b4:	80 fd       	sbrc	r24, 0
+  b6:	03 c0       	rjmp	.+6      	; 0xbe <is_pressed+0x52>
 	{
 		return 1;
+  b8:	81 e0       	ldi	r24, 0x01	; 1
+  ba:	90 e0       	ldi	r25, 0x00	; 0
+  bc:	08 95       	ret
 	}
 	return 0;
-  8c:	90 e0       	ldi	r25, 0x00	; 0
-  8e:	08 95       	ret
+  be:	80 e0       	ldi	r24, 0x00	; 0
+  c0:	90 e0       	ldi	r25, 0x00	; 0
+  c2:	08 95       	ret
 
-00000090 <avr_wait>:
+000000c4 <get_key>:
+#include "avr.h"
+#include "keypad.h"
+#include "stdio.h"
+
+int get_key()
+{
+  c4:	0f 93       	push	r16
+  c6:	1f 93       	push	r17
+  c8:	cf 93       	push	r28
+  ca:	df 93       	push	r29
+	int i, j;
+	for (i = 0; i < 4; ++i)
+  cc:	00 e0       	ldi	r16, 0x00	; 0
+  ce:	10 e0       	ldi	r17, 0x00	; 0
+  d0:	18 c0       	rjmp	.+48     	; 0x102 <get_key+0x3e>
+	{
+		for (j = 0; j < 4; ++j)
+		{
+			if (is_pressed(i,j))
+  d2:	be 01       	movw	r22, r28
+  d4:	c8 01       	movw	r24, r16
+  d6:	0e 94 36 00 	call	0x6c	; 0x6c <is_pressed>
+  da:	89 2b       	or	r24, r25
+  dc:	49 f0       	breq	.+18     	; 0xf0 <get_key+0x2c>
+			{
+				return i * 4 + j + 1;
+  de:	c8 01       	movw	r24, r16
+  e0:	88 0f       	add	r24, r24
+  e2:	99 1f       	adc	r25, r25
+  e4:	88 0f       	add	r24, r24
+  e6:	99 1f       	adc	r25, r25
+  e8:	8c 0f       	add	r24, r28
+  ea:	9d 1f       	adc	r25, r29
+  ec:	01 96       	adiw	r24, 0x01	; 1
+  ee:	0c c0       	rjmp	.+24     	; 0x108 <get_key+0x44>
+int get_key()
+{
+	int i, j;
+	for (i = 0; i < 4; ++i)
+	{
+		for (j = 0; j < 4; ++j)
+  f0:	21 96       	adiw	r28, 0x01	; 1
+  f2:	02 c0       	rjmp	.+4      	; 0xf8 <get_key+0x34>
+  f4:	c0 e0       	ldi	r28, 0x00	; 0
+  f6:	d0 e0       	ldi	r29, 0x00	; 0
+  f8:	c4 30       	cpi	r28, 0x04	; 4
+  fa:	d1 05       	cpc	r29, r1
+  fc:	54 f3       	brlt	.-44     	; 0xd2 <get_key+0xe>
+#include "stdio.h"
+
+int get_key()
+{
+	int i, j;
+	for (i = 0; i < 4; ++i)
+  fe:	0f 5f       	subi	r16, 0xFF	; 255
+ 100:	1f 4f       	sbci	r17, 0xFF	; 255
+ 102:	04 30       	cpi	r16, 0x04	; 4
+ 104:	11 05       	cpc	r17, r1
+ 106:	b4 f3       	brlt	.-20     	; 0xf4 <get_key+0x30>
+			{
+				return i * 4 + j + 1;
+			}
+		}
+	}
+}
+ 108:	df 91       	pop	r29
+ 10a:	cf 91       	pop	r28
+ 10c:	1f 91       	pop	r17
+ 10e:	0f 91       	pop	r16
+ 110:	08 95       	ret
+
+00000112 <avr_wait>:
 }
 
 void
 avr_wait(unsigned short msec)
 {
 	TCCR0 = 3;
-  90:	23 e0       	ldi	r18, 0x03	; 3
-  92:	23 bf       	out	0x33, r18	; 51
+ 112:	23 e0       	ldi	r18, 0x03	; 3
+ 114:	23 bf       	out	0x33, r18	; 51
 	while (msec--) {
-  94:	0a c0       	rjmp	.+20     	; 0xaa <avr_wait+0x1a>
+ 116:	0a c0       	rjmp	.+20     	; 0x12c <avr_wait+0x1a>
 		TCNT0 = (unsigned char)(256 - (XTAL_FRQ / 64) * 0.001);
-  96:	83 e8       	ldi	r24, 0x83	; 131
-  98:	82 bf       	out	0x32, r24	; 50
+ 118:	83 e8       	ldi	r24, 0x83	; 131
+ 11a:	82 bf       	out	0x32, r24	; 50
 		SET_BIT(TIFR, TOV0);
-  9a:	88 b7       	in	r24, 0x38	; 56
-  9c:	81 60       	ori	r24, 0x01	; 1
-  9e:	88 bf       	out	0x38, r24	; 56
+ 11c:	88 b7       	in	r24, 0x38	; 56
+ 11e:	81 60       	ori	r24, 0x01	; 1
+ 120:	88 bf       	out	0x38, r24	; 56
 		WDR();
-  a0:	a8 95       	wdr
+ 122:	a8 95       	wdr
 		while (!GET_BIT(TIFR, TOV0));
-  a2:	08 b6       	in	r0, 0x38	; 56
-  a4:	00 fe       	sbrs	r0, 0
-  a6:	fd cf       	rjmp	.-6      	; 0xa2 <avr_wait+0x12>
+ 124:	08 b6       	in	r0, 0x38	; 56
+ 126:	00 fe       	sbrs	r0, 0
+ 128:	fd cf       	rjmp	.-6      	; 0x124 <avr_wait+0x12>
 
 void
 avr_wait(unsigned short msec)
 {
 	TCCR0 = 3;
 	while (msec--) {
-  a8:	c9 01       	movw	r24, r18
-  aa:	9c 01       	movw	r18, r24
-  ac:	21 50       	subi	r18, 0x01	; 1
-  ae:	31 09       	sbc	r19, r1
-  b0:	89 2b       	or	r24, r25
-  b2:	89 f7       	brne	.-30     	; 0x96 <avr_wait+0x6>
+ 12a:	c9 01       	movw	r24, r18
+ 12c:	9c 01       	movw	r18, r24
+ 12e:	21 50       	subi	r18, 0x01	; 1
+ 130:	31 09       	sbc	r19, r1
+ 132:	89 2b       	or	r24, r25
+ 134:	89 f7       	brne	.-30     	; 0x118 <avr_wait+0x6>
 		TCNT0 = (unsigned char)(256 - (XTAL_FRQ / 64) * 0.001);
 		SET_BIT(TIFR, TOV0);
 		WDR();
 		while (!GET_BIT(TIFR, TOV0));
 	}
 	TCCR0 = 0;
-  b4:	13 be       	out	0x33, r1	; 51
-  b6:	08 95       	ret
+ 136:	13 be       	out	0x33, r1	; 51
+ 138:	08 95       	ret
 
-000000b8 <main>:
+0000013a <main>:
 }
 
 main()
 {
-  b8:	0f 93       	push	r16
-  ba:	1f 93       	push	r17
-  bc:	cf 93       	push	r28
-  be:	df 93       	push	r29
-	int k = is_pressed(0,0);
-  c0:	60 e0       	ldi	r22, 0x00	; 0
-  c2:	70 e0       	ldi	r23, 0x00	; 0
-  c4:	80 e0       	ldi	r24, 0x00	; 0
-  c6:	90 e0       	ldi	r25, 0x00	; 0
-  c8:	0e 94 36 00 	call	0x6c	; 0x6c <is_pressed>
-  cc:	8c 01       	movw	r16, r24
-
-	for (int i = 0; i < k; i++)
-  ce:	c0 e0       	ldi	r28, 0x00	; 0
-  d0:	d0 e0       	ldi	r29, 0x00	; 0
-  d2:	0f c0       	rjmp	.+30     	; 0xf2 <main+0x3a>
+	DDRB = 0x01;  // set PORTB to output at B0
+ 13a:	81 e0       	ldi	r24, 0x01	; 1
+ 13c:	87 bb       	out	0x17, r24	; 23
+    for (;;)
 	{
-	    SET_BIT(PORTB, 0);
-  d4:	88 b3       	in	r24, 0x18	; 24
-  d6:	81 60       	ori	r24, 0x01	; 1
-  d8:	88 bb       	out	0x18, r24	; 24
-	    avr_wait(250);
-  da:	8a ef       	ldi	r24, 0xFA	; 250
-  dc:	90 e0       	ldi	r25, 0x00	; 0
-  de:	0e 94 48 00 	call	0x90	; 0x90 <avr_wait>
-	    CLR_BIT(PORTB, 0);
-  e2:	88 b3       	in	r24, 0x18	; 24
-  e4:	8e 7f       	andi	r24, 0xFE	; 254
-  e6:	88 bb       	out	0x18, r24	; 24
-	    avr_wait(250);
-  e8:	8a ef       	ldi	r24, 0xFA	; 250
-  ea:	90 e0       	ldi	r25, 0x00	; 0
-  ec:	0e 94 48 00 	call	0x90	; 0x90 <avr_wait>
+		avr_wait(1000);
+ 13e:	88 ee       	ldi	r24, 0xE8	; 232
+ 140:	93 e0       	ldi	r25, 0x03	; 3
+ 142:	0e 94 89 00 	call	0x112	; 0x112 <avr_wait>
+		int i, k;
+		k = get_key();
+ 146:	0e 94 62 00 	call	0xc4	; 0xc4 <get_key>
+ 14a:	8c 01       	movw	r16, r24
+		for(i = 0; i < k; ++i)
+ 14c:	c0 e0       	ldi	r28, 0x00	; 0
+ 14e:	d0 e0       	ldi	r29, 0x00	; 0
+ 150:	0f c0       	rjmp	.+30     	; 0x170 <main+0x36>
+		{
+		    SET_BIT(PORTB, 0);
+ 152:	88 b3       	in	r24, 0x18	; 24
+ 154:	81 60       	ori	r24, 0x01	; 1
+ 156:	88 bb       	out	0x18, r24	; 24
+			avr_wait(500);
+ 158:	84 ef       	ldi	r24, 0xF4	; 244
+ 15a:	91 e0       	ldi	r25, 0x01	; 1
+ 15c:	0e 94 89 00 	call	0x112	; 0x112 <avr_wait>
+			CLR_BIT(PORTB, 0);
+ 160:	88 b3       	in	r24, 0x18	; 24
+ 162:	8e 7f       	andi	r24, 0xFE	; 254
+ 164:	88 bb       	out	0x18, r24	; 24
+			avr_wait(500);
+ 166:	84 ef       	ldi	r24, 0xF4	; 244
+ 168:	91 e0       	ldi	r25, 0x01	; 1
+ 16a:	0e 94 89 00 	call	0x112	; 0x112 <avr_wait>
+    for (;;)
+	{
+		avr_wait(1000);
+		int i, k;
+		k = get_key();
+		for(i = 0; i < k; ++i)
+ 16e:	21 96       	adiw	r28, 0x01	; 1
+ 170:	c0 17       	cp	r28, r16
+ 172:	d1 07       	cpc	r29, r17
+ 174:	74 f3       	brlt	.-36     	; 0x152 <main+0x18>
+ 176:	e3 cf       	rjmp	.-58     	; 0x13e <main+0x4>
 
-main()
-{
-	int k = is_pressed(0,0);
+00000178 <_exit>:
+ 178:	f8 94       	cli
 
-	for (int i = 0; i < k; i++)
-  f0:	21 96       	adiw	r28, 0x01	; 1
-  f2:	c0 17       	cp	r28, r16
-  f4:	d1 07       	cpc	r29, r17
-  f6:	74 f3       	brlt	.-36     	; 0xd4 <main+0x1c>
-	    avr_wait(250);
-	    CLR_BIT(PORTB, 0);
-	    avr_wait(250);
-	}
-	
-}
-  f8:	80 e0       	ldi	r24, 0x00	; 0
-  fa:	90 e0       	ldi	r25, 0x00	; 0
-  fc:	df 91       	pop	r29
-  fe:	cf 91       	pop	r28
- 100:	1f 91       	pop	r17
- 102:	0f 91       	pop	r16
- 104:	08 95       	ret
-
-00000106 <_exit>:
- 106:	f8 94       	cli
-
-00000108 <__stop_program>:
- 108:	ff cf       	rjmp	.-2      	; 0x108 <__stop_program>
+0000017a <__stop_program>:
+ 17a:	ff cf       	rjmp	.-2      	; 0x17a <__stop_program>
