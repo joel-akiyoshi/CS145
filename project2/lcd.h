@@ -20,4 +20,23 @@ void lcd_puts1(const char *s);
 
 void lcd_puts2(const char *s);
 
+typedef struct {
+	int year;
+	unsigned char month;
+	unsigned char day;
+	unsigned char hour;
+	unsigned char minute;
+	unsigned char second;
+} DateTime;
+
+void init_dt(DateTime *dt);
+
+void advance_dt(DateTime *dt);
+
+void print_dt(const DateTime *dt);
+
+void print_time(const DateTime *dt);
+
+void enter_year(DateTime *dt);
+
 #endif /* _LCD_H */
