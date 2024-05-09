@@ -13,10 +13,7 @@
 
 #include <avr/io.h>
 #include <stdio.h>
-<<<<<<< HEAD:project2/main.c
 #include <stdlib.h>
-=======
->>>>>>> 8bb36e9b56c1b6958fc24492eb13d137f1b45ddf:project_2/main.c
 #include <stdbool.h>
 
 void
@@ -40,11 +37,8 @@ avr_wait(unsigned short msec)
 
 main()
 {
-	lcd_init();
-	lcd_clr();
-	
-<<<<<<< HEAD:project2/main.c
 	DateTime dt;
+	lcd_init();
 	init_dt(&dt);
 	while(1)
 	{
@@ -52,49 +46,20 @@ main()
 		advance_dt(&dt);
 		print_dt(&dt);
 		print_time(&dt);
-		if (is_pressed(0,3)) //if A is pressed (2 sec press)
+		
+		if(is_pressed(3, 3))
 		{
-			enter_year(&dt);
+			set_year(&dt);
+			set_month(&dt);
+			set_day(&dt);
+		}
+		
+		else if(is_pressed(0, 3))
+		{
+			set_hour(&dt);
+			set_min(&dt);
+			set_sec(&dt);
 		}
 	}
-
-// 	char keys[16] = {'1', '2', '3', 'A',
-// 					 '4', '5', '6', 'B',
-// 					 '7', '8', '9', 'C',
-// 					 '*', '0', '#', 'D'};
-// 
-// 	DDRA = 0x01;
-// 	int k;
-// 	
-// 	lcd_pos(0,0);
-// 	while (1)
-// 	{
-// 		k = get_key();
-// 		if (k > 0 && k <= 16)
-// 		{
-// 			if (k == 12)
-// 			{
-// 				lcd_clr();
-// 				lcd_pos(0,0);
-// 			} else {
-// 				lcd_put(keys[k-1]);
-// 				avr_wait(300);	
-// 			}
-// 		}
-// 	}
 	return 0;
 }
-=======
-	int r, c;
-	char a = '0';
-	for (r = 0; r < 2; r++) 
-	{
-		for (c = 0; c < 16; c++)
-		{
-			lcd_pos(r, c);
-			lcd_put(a);
-			avr_wait(100);
-		}
-	}
-}
->>>>>>> 8bb36e9b56c1b6958fc24492eb13d137f1b45ddf:project_2/main.c

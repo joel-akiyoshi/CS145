@@ -26,16 +26,14 @@ int get_key()
 
 int is_pressed(int r, int c)
 {
-<<<<<<< HEAD:project2/keypad.c
 	CLR_BIT(PORTA, 0);
 	// set all GPIO to 0
 	DDRC = 0;
 	PORTC = 0xF0;
-=======
+
 	// set all GPIO to 0
 	DDRC = 0;
 	PORTC = 0;
->>>>>>> 8bb36e9b56c1b6958fc24492eb13d137f1b45ddf:project_2/keypad.c
 
     SET_BIT(DDRC, r);  // set row pin to OUTPUT
 	CLR_BIT(PORTC, r);  // write a '0' to PORTC at r

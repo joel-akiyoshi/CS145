@@ -27,6 +27,8 @@ typedef struct {
 	unsigned char hour;
 	unsigned char minute;
 	unsigned char second;
+	unsigned char military;
+	unsigned char am;
 } DateTime;
 
 void init_dt(DateTime *dt);
@@ -37,6 +39,16 @@ void print_dt(const DateTime *dt);
 
 void print_time(const DateTime *dt);
 
-void enter_year(DateTime *dt);
+void set_year(DateTime *dt);
+
+void set_month(DateTime *dt);
+
+void set_day(DateTime *dt);
+
+void set_hour(DateTime *dt);
+
+void set_minute(DateTime *dt);
+
+void set_second(DateTime *dt);
 
 #endif /* _LCD_H */

@@ -132,10 +132,11 @@ init_dt(DateTime *dt)
 {
 	dt->year = 2022;
 	dt->month = 12;
-	dt->day = 30;
+	dt->day = 31;
 	dt->hour = 23;
 	dt->minute = 59;
 	dt->second = 50;
+	dt->am = 1;
 }
 
 void 
@@ -198,50 +199,193 @@ print_time(const DateTime *dt)
 	lcd_puts2(buf);
 }
 
+char keys[16] = {'1', '2', '3', 'A',
+				 '4', '5', '6', 'B',
+				 '7', '8', '9', 'C',
+				 '*', '0', '#', 'D'};
+
 void 
-enter_year(DateTime *dt)
+set_year(DateTime *dt)
 {
+	// prompt for year
 	lcd_clr();
-	char buf[] = "YEAR?";
+	char buf[] = "SET YEAR [YYYY]";
 	lcd_pos(0,0);
 	lcd_puts2(buf);
 	
-	char keys[16] = {'1', '2', '3', 'A',
-					 '4', '5', '6', 'B',
-					 '7', '8', '9', 'C',
-					 '*', '0', '#', 'D'};
-	
-	int year[4];
-	
+	avr_wait(1000);
+    
+	// track key presses
 	lcd_pos(1,0);
-	int i, k;
-	i = 0;
-	while(!is_pressed(3,3)) //until press D
+	int year[4];
+	int element_count = 0;
+	while(!(is_pressed(3, 3) && element_count == 4))
 	{
-		k = get_key();
-		if (k > 0 && k < 16)
+		int key_index = get_key();
+	    if (key_index > 0 && key_index <= 16 && key_index % 4 && element_count < 4)  // key on keypad, less than 4 digits written
 		{
-			if (k == 12)
-			{
-				lcd_clr();
-				lcd_pos(0,0);
-				lcd_puts2(buf);
-				lcd_pos(1,0);
-				year[0] = 0;
-				year[1] = 0;
-				year[2] = 0;
-				year[3] = 0;
-				
-			} else {
-				lcd_put(keys[k-1]);
-				if (i < 4)
-				{
-					year[i-1] = keys[k-1] - '0';
-					++i;
-				}
-				avr_wait(300);
-			}
+			char key = keys[key_index - 1];
+			year[element_count] = key;
+			element_count++;
+			lcd_put(key);
 		}
+		avr_wait(500);
 	}
-	dt->year = year[0] * 1000 + year[1] * 100 + year[2] * 10 + year[3] * 1;
+	lcd_clr();
+	dt->year = 1000 * (year[0] - '0') + 100 * (year[1] - '0') + 10 * (year[2] - '0') + (year[3] - '0');
+}
+
+void
+set_month(DateTime *dt)
+{
+	// prompt for month
+	lcd_clr();
+	char buf[] = "SET MONTH [MM]";
+	lcd_pos(0,0);
+	lcd_puts2(buf);
+	
+	avr_wait(1000);
+	
+	// track key presses
+	lcd_pos(1,0);
+	int month[2];
+	int element_count = 0;
+	while(!(is_pressed(3, 3) && element_count == 2))
+	{
+		int key_index = get_key();
+		if (key_index > 0 && key_index <= 16 && key_index % 4 && element_count < 2)  // if the key is a valid number & less than 2 nums
+		{
+			char key = keys[key_index - 1];
+			month[element_count] = key;
+			element_count++;
+			lcd_put(key);
+		}
+		avr_wait(500);
+	}
+	lcd_clr();
+	dt->month = 10 * (month[0] - '0') + (month[1] - '0');
+}
+
+void
+set_day(DateTime *dt)
+{
+	// prompt for day
+	lcd_clr();
+	char buf[] = "SET DAY [DD]";
+	lcd_pos(0,0);
+	lcd_puts2(buf);
+	
+	avr_wait(1000);
+	
+	// track key presses
+	lcd_pos(1,0);
+	int day[2];
+	int element_count = 0;
+	while(!(is_pressed(3, 3) && element_count == 2))
+	{
+		int key_index = get_key();
+		if (key_index > 0 && key_index <= 16 && key_index % 4 && element_count < 2)  // if the key is a valid number & less than 2 nums
+		{
+			char key = keys[key_index - 1];
+			day[element_count] = key;
+			element_count++;
+			lcd_put(key);
+		}
+		avr_wait(250);
+	}
+	lcd_clr();
+	dt->day = 10 * (day[0] - '0') + (day[1] - '0');
+}
+
+void
+set_hour(DateTime *dt)
+{
+	// prompt for month
+	lcd_clr();
+	char buf[] = "SET HOUR [HH]";
+	lcd_pos(0,0);
+	lcd_puts2(buf);
+	
+	avr_wait(1000);
+	
+	// track key presses
+	lcd_pos(1,0);
+	int hour[2];
+	int element_count = 0;
+	while(!(is_pressed(0, 3) && element_count == 2))
+	{
+		int key_index = get_key();
+		if (key_index > 0 && key_index <= 16 && key_index % 4 && element_count < 2)  // if the key is a valid number & less than 2 nums
+		{
+			char key = keys[key_index - 1];
+			hour[element_count] = key;
+			element_count++;
+			lcd_put(key);
+		}
+		avr_wait(500);
+	}
+	lcd_clr();
+	dt->hour = 10 * (hour[0] - '0') + (hour[1] - '0');
+}
+
+void
+set_min(DateTime *dt)
+{
+	// prompt for month
+	lcd_clr();
+	char buf[] = "SET MIN [MM]";
+	lcd_pos(0,0);
+	lcd_puts2(buf);
+	
+	avr_wait(1000);
+	
+	// track key presses
+	lcd_pos(1,0);
+	int min[2];
+	int element_count = 0;
+	while(!(is_pressed(0, 3) && element_count == 2))
+	{
+		int key_index = get_key();
+		if (key_index > 0 && key_index <= 16 && key_index % 4 && element_count < 2)  // if the key is a valid number & less than 2 nums
+		{
+			char key = keys[key_index - 1];
+			min[element_count] = key;
+			element_count++;
+			lcd_put(key);
+		}
+		avr_wait(500);
+	}
+	lcd_clr();
+	dt->minute = 10 * (min[0] - '0') + (min[1] - '0');
+}
+
+void
+set_sec(DateTime *dt)
+{
+	// prompt for sec
+	lcd_clr();
+	char buf[] = "SET SEC [SS]";
+	lcd_pos(0,0);
+	lcd_puts2(buf);
+	
+	avr_wait(1000);
+	
+	// track key presses
+	lcd_pos(1,0);
+	int sec[2];
+	int element_count = 0;
+	while(!(is_pressed(0, 3) && element_count == 2))
+	{
+		int key_index = get_key();
+		if (key_index > 0 && key_index <= 16 && key_index % 4 && element_count < 2)  // if the key is a valid number & less than 2 nums
+		{
+			char key = keys[key_index - 1];
+			sec[element_count] = key;
+			element_count++;
+			lcd_put(key);
+		}
+		avr_wait(500);
+	}
+	lcd_clr();
+	dt->second = 10 * (sec[0] - '0') + (sec[1] - '0');
 }
