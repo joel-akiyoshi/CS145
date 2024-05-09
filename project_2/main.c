@@ -13,7 +13,10 @@
 
 #include <avr/io.h>
 #include <stdio.h>
+<<<<<<< HEAD:project2/main.c
 #include <stdlib.h>
+=======
+>>>>>>> 8bb36e9b56c1b6958fc24492eb13d137f1b45ddf:project_2/main.c
 #include <stdbool.h>
 
 void
@@ -40,6 +43,7 @@ main()
 	lcd_init();
 	lcd_clr();
 	
+<<<<<<< HEAD:project2/main.c
 	DateTime dt;
 	init_dt(&dt);
 	while(1)
@@ -80,3 +84,17 @@ main()
 // 	}
 	return 0;
 }
+=======
+	int r, c;
+	char a = '0';
+	for (r = 0; r < 2; r++) 
+	{
+		for (c = 0; c < 16; c++)
+		{
+			lcd_pos(r, c);
+			lcd_put(a);
+			avr_wait(100);
+		}
+	}
+}
+>>>>>>> 8bb36e9b56c1b6958fc24492eb13d137f1b45ddf:project_2/main.c
