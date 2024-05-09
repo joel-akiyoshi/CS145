@@ -213,7 +213,7 @@ set_year(DateTime *dt)
 	lcd_pos(0,0);
 	lcd_puts2(buf);
 	
-	avr_wait(1000);
+	// avr_wait(1000);
     
 	// track key presses
 	lcd_pos(1,0);
@@ -244,7 +244,7 @@ set_month(DateTime *dt)
 	lcd_pos(0,0);
 	lcd_puts2(buf);
 	
-	avr_wait(1000);
+	// avr_wait(1000);
 	
 	// track key presses
 	lcd_pos(1,0);
@@ -275,7 +275,7 @@ set_day(DateTime *dt)
 	lcd_pos(0,0);
 	lcd_puts2(buf);
 	
-	avr_wait(1000);
+	// avr_wait(1000);
 	
 	// track key presses
 	lcd_pos(1,0);
@@ -300,13 +300,13 @@ set_day(DateTime *dt)
 void
 set_hour(DateTime *dt)
 {
-	// prompt for month
+	// prompt for hour
 	lcd_clr();
 	char buf[] = "SET HOUR [HH]";
 	lcd_pos(0,0);
 	lcd_puts2(buf);
 	
-	avr_wait(1000);
+	// avr_wait(1000);
 	
 	// track key presses
 	lcd_pos(1,0);
@@ -331,13 +331,13 @@ set_hour(DateTime *dt)
 void
 set_min(DateTime *dt)
 {
-	// prompt for month
+	// prompt for minute
 	lcd_clr();
 	char buf[] = "SET MIN [MM]";
 	lcd_pos(0,0);
 	lcd_puts2(buf);
 	
-	avr_wait(1000);
+	// avr_wait(1000);
 	
 	// track key presses
 	lcd_pos(1,0);
@@ -368,7 +368,7 @@ set_sec(DateTime *dt)
 	lcd_pos(0,0);
 	lcd_puts2(buf);
 	
-	avr_wait(1000);
+	// avr_wait(1000);
 	
 	// track key presses
 	lcd_pos(1,0);

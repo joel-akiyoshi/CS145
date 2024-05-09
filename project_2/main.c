@@ -47,14 +47,14 @@ main()
 		print_dt(&dt);
 		print_time(&dt);
 		
-		if(is_pressed(3, 3))
+		if(get_key() == 16) //key D
 		{
 			set_year(&dt);
 			set_month(&dt);
 			set_day(&dt);
 		}
 		
-		else if(is_pressed(0, 3))
+		else if(get_key() == 4) //key A
 		{
 			set_hour(&dt);
 			set_min(&dt);
