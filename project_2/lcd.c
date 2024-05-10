@@ -8,6 +8,7 @@
 #include "lcd.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 
 #define DDR    DDRB
@@ -133,10 +134,48 @@ init_dt(DateTime *dt)
 	dt->year = 2022;
 	dt->month = 12;
 	dt->day = 31;
-	dt->hour = 23;
+	dt->hour = 11;
 	dt->minute = 59;
-	dt->second = 50;
-	dt->am = 1;
+	dt->second = 47;
+	dt->mode_ampm = 0;
+	dt->is_am = 1;
+}
+
+void
+change_mode(DateTime *dt)
+{
+	if (dt->mode_ampm) //if mode in am/pm
+	{
+		dt->mode_ampm = 0; //set mode to military
+		if (!dt->is_am && dt->hour > 12) //if clock in pm, add 12 hours to get military
+		{
+			dt->hour += 12;
+		} else if (dt->is_am && dt->hour == 12) //else if 12 AM, set to 00 for military
+		{
+			dt->hour = 0;
+		}
+	} else {
+		dt->mode_ampm = 1; //set mode to am/pm
+		if (dt->hour == 0) 
+		{
+			dt->is_am = 1;
+			dt->hour += 12;
+		}
+		else if (dt->hour >= 13) //if hour was above 13, decrease by 12 and set to PM
+		{
+			dt->is_am = 0;
+			dt->hour -= 12;
+		}
+	}
+}
+
+void
+change_ampm(DateTime *dt)
+{
+	if (dt->mode_ampm) //when only in am/pm mode, switch between am/pm
+	{
+		dt->is_am = !(dt->is_am);
+	}
 }
 
 void 
@@ -156,18 +195,47 @@ advance_dt(DateTime *dt)
 	if (dt->minute >= 60)
 	{
 		++dt->hour;
+		if (dt->mode_ampm && dt->hour == 12) //if in am/pm and hour is 12, 
+		{
+			dt->is_am = !(dt->is_am); //switch am/pm
+			if (dt->is_am) //if it was 12 am, increment day
+			{
+				++dt->day;
+			}
+		}
 		dt->minute = 0;
 	}
 	
 	//advance days
-	if (dt->hour >= 24)
+	if (dt->mode_ampm) //AM/PM mode
+	{		
+		if (dt->hour >= 13)
+		{
+			dt->hour = 1;
+		}
+	} else if (dt->hour >= 24) //military mode
 	{
 		++dt->day;
 		dt->hour = 0;
 	}
 	
 	//advance months
-	if (dt->day >= 32)
+	if (dt->month == 2) //if February
+	{
+		if ((dt->year % 4) == 0) //if leap year
+		{
+			if (dt->day >= 30)
+			{
+				++dt->month;
+				dt->day = 1;
+			}
+		}
+		else if (dt->day >= 29)
+		{
+			++dt->month;
+			dt->day = 1;
+		}
+	} else if (dt->day >= 32)
 	{
 		++dt->month;
 		dt->day = 1;
@@ -197,6 +265,17 @@ print_time(const DateTime *dt)
 	lcd_pos(1,0);
 	sprintf(buf, "%02d:%02d:%02d", dt->hour, dt->minute, dt->second);
 	lcd_puts2(buf);
+	if (dt->mode_ampm)
+	{
+		if (dt->is_am)
+		{
+			lcd_puts2(" AM");
+		} else {
+			lcd_puts2(" PM");
+		}
+	} else {
+		lcd_puts2("   ");
+	}
 }
 
 char keys[16] = {'1', '2', '3', 'A',

@@ -47,7 +47,7 @@ main()
 		print_dt(&dt);
 		print_time(&dt);
 		
-		if(get_key() == 16) //key D
+		if(get_key() == 16) //key D for date
 		{
 			set_year(&dt);
 			set_month(&dt);
@@ -59,6 +59,16 @@ main()
 			set_hour(&dt);
 			set_min(&dt);
 			set_sec(&dt);
+		}
+		
+		else if (get_key() == 12) //key C for change
+		{
+			change_mode(&dt);
+		}
+		
+		else if (get_key() == 8) //key B for am/pm change (only in am/pm mode)
+		{
+			change_ampm(&dt);
 		}
 	}
 	return 0;

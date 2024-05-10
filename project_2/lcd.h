@@ -29,6 +29,8 @@ typedef struct {
 	unsigned char second;
 	unsigned char military;
 	unsigned char am;
+	int mode_ampm;
+	int is_am;
 } DateTime;
 
 void init_dt(DateTime *dt);
@@ -50,5 +52,9 @@ void set_hour(DateTime *dt);
 void set_minute(DateTime *dt);
 
 void set_second(DateTime *dt);
+
+void change_mode(DateTime *dt);
+
+void change_ampm(DateTime *dt);
 
 #endif /* _LCD_H */

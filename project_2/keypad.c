@@ -31,10 +31,6 @@ int is_pressed(int r, int c)
 	DDRC = 0;
 	PORTC = 0xF0;
 
-	// set all GPIO to 0
-	DDRC = 0;
-	PORTC = 0;
-
     SET_BIT(DDRC, r);  // set row pin to OUTPUT
 	CLR_BIT(PORTC, r);  // write a '0' to PORTC at r
 
