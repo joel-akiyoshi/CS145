@@ -1,0 +1,15 @@
+Project 2: Digital Clock
+
+Components:
+- ATMEGA32 microcontroller
+- LCD screen
+- 4 x 4 keypad
+- Resistors & wires
+- Voltage Regulator
+- 9V Battery
+- 8 mHz crystal
+- Programmer
+
+Description:
+The LCD and keypad function as a customizable clock that displays date in YYYY/MM/DD format, and the time in HH:MM:SS.
+Both the date and time are programmable using the "D" and "A" keys, respectively. 
