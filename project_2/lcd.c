@@ -147,7 +147,7 @@ change_mode(DateTime *dt)
 	if (dt->mode_ampm) //if mode in am/pm
 	{
 		dt->mode_ampm = 0; //set mode to military
-		if (!dt->is_am && dt->hour > 12) //if clock in pm, add 12 hours to get military
+		if (!dt->is_am && dt->hour < 12) //if clock in pm, add 12 hours to get military
 		{
 			dt->hour += 12;
 		} else if (dt->is_am && dt->hour == 12) //else if 12 AM, set to 00 for military
