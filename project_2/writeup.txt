@@ -12,7 +12,8 @@ Components:
 
 Description:
 The LCD and keypad function as a customizable clock that displays date in YYYY/MM/DD format, and the time in HH:MM:SS.
-Both the date and time are programmable using the "D" and "A" keys, respectively. 
+Both the date and time are programmable using the "D" and "A" keys, respectively. Functionality for leap year and AM/PM time has been
+implemented as well (Extra Credit).
 
 Notes:
 The schematic is contained in the "images" folder of the project_2 directory.
