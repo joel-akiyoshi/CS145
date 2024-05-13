@@ -36,6 +36,10 @@ avr_wait(unsigned short msec)
 
 main()
 {
+	while(1)
+	{
+		play_note(A);
+	}
 	return 0;
 }
 

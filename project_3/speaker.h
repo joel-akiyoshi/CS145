@@ -6,6 +6,9 @@
  */ 
 
 typedef enum {A, As, B, C, Cs, D, Ds, E, F, Fs, G, Gs} Note;
+	
+int THTL[] = {0,0,0,0,0,0,0,0,0,0,0,0};
+int dur[] = {0,0,0,0,0,0,0,0,0,0,0,0};
 
 typedef enum {W, H, Q, E} Duration;
 	
