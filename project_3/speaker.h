@@ -4,13 +4,15 @@
  * Created: 5/13/2024 1:26:53 PM
  *  Author: Chan Young Ji & Joel Akiyoshi
  */ 
+#ifndef _SPEAKER_H
+#define _SPEAKER_H
 
 typedef enum {A, As, B, C, Cs, D, Ds, E, F, Fs, G, Gs} Note;
 	
-int THTL[] = {0,0,0,0,0,0,0,0,0,0,0,0};
-int dur[] = {0,0,0,0,0,0,0,0,0,0,0,0};
+const double THTL[]; 
+const double period[];
 
-typedef enum {W, H, Q, E} Duration;
+typedef enum {W = 8, H = 4, Q = 2, Ei = 1} Duration;
 	
 typedef struct  
 {
@@ -20,3 +22,6 @@ typedef struct
 
 void play_song(const PlayingNote song[], int length);
 void play_note(const PlayingNote* note);
+
+
+#endif /* _SPEAKER_H */

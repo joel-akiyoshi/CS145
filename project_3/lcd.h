@@ -20,5 +20,6 @@ void lcd_puts1(const char *s);
 
 void lcd_puts2(const char *s);
 
+void display_song(int sn);
 
 #endif /* _LCD_H */

@@ -128,3 +128,22 @@ lcd_puts2(const char *s)
 	}
 }
 
+void
+display_song(int sn)
+{
+	lcd_clr();
+	lcd_pos(0,0);
+	char title[] = "Current Song:";
+	lcd_puts2(title);
+	
+	lcd_pos(1,0);
+	if (sn == 1)
+	{
+		char buf1[] = "Little Star";
+		lcd_puts2(buf1);
+	} else if (sn == 2)
+	{
+		char buf2[] = "Rick Roll";
+		lcd_puts2(buf2);
+	}
+}
