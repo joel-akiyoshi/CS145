@@ -1,0 +1,16 @@
+Project 3: Digital Clock
+
+Components:
+- ATMEGA32 microcontroller
+- LCD screen
+- 4 x 4 keypad
+- Resistors & wires
+- Voltage Regulator
+- 9V Battery
+- 8 mHz crystal
+- Programmer
+- Speaker
+
+Description:
+The main purpose of the project was to design a music box using a speaker, keypad, and LCD. Songs are selected by the keypad, displayed on
+the LCD, and played through the speaker. Stop/start functionality is included by pressing A/B keys, and songs are selected using keys 1/2.
