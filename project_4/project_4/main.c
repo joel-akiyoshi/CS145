@@ -6,9 +6,8 @@
  */ 
 
 #include "avr.h"
-#include "keypad.h"
 #include "lcd.h"
-#include "speaker.h"
+#include "voltmeter.h"
 
 #include <avr/io.h>
 #include <stdio.h>
@@ -35,8 +34,43 @@ avr_wait(unsigned short msec)
 
 int main(void)
 {
-    while (1) 
-    {
-    }
+	DDRA = 0;
+	char volt[20];
+	char avg[20];
+	int max;
+	int min;
+	char max_str[20];
+	char min_str[20];
+	avr_init();
+	lcd_init();
+	
+	unsigned long sum = 0;
+	unsigned long count = 0;
+	
+	while(1)
+	{
+	    lcd_clr();
+		int new_sample = get_sample();  // int value from 0-1023
+		max = compute_max(max);
+		sprintf(max_str, "%.2f", (max / 1023.0) * 5);
+		lcd_pos(1, 0);
+		lcd_puts2(max_str);
+		
+		min = compute_min(min);
+		sprintf(min_str, "%.2f", (min / 1023.0) * 5);
+		lcd_pos(1, 9);
+		lcd_puts2(min_str);
+		
+    	sprintf(volt, "%.2f", (new_sample / 1023.0) * 5);
+		lcd_pos(0, 0);
+		lcd_puts2(volt);
+		
+		sum += new_sample;
+		sprintf(avg, "%.2f", ((sum / ++count) / 1023.0) * 5);
+		lcd_pos(0, 9);
+		lcd_puts2(avg);
+		
+	    avr_wait(500);
+	}
 }
 
