@@ -16,7 +16,7 @@ int get_sample()
 	return ADC;
 }
 
-int compute_max(int current_max)
+unsigned int compute_max(unsigned int current_max)
 {
 	int new_sample = get_sample();
 	if (new_sample > current_max)
@@ -26,7 +26,7 @@ int compute_max(int current_max)
 	return current_max;
 }
 
-int compute_min(int current_min)
+unsigned int compute_min(unsigned int current_min)
 {
 	int new_sample = get_sample();
 	if (new_sample < current_min)
@@ -36,7 +36,3 @@ int compute_min(int current_min)
 	return current_min;
 }
 
-int compute_avg(int current_avg)
-{
-	
-}

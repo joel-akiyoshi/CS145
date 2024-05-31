@@ -10,10 +10,8 @@
 
 int get_sample(void);
 
-int compute_max(int current_max);
+unsigned int compute_max(unsigned int current_max);
 
-int compute_min(int current_min);
-
-int compute_avg(int current_avg);
+unsigned int compute_min(unsigned int current_min);
 
 #endif /* _VOLTMETER_H */

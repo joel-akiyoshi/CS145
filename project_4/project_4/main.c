@@ -8,6 +8,7 @@
 #include "avr.h"
 #include "lcd.h"
 #include "voltmeter.h"
+#include "keypad.h"
 
 #include <avr/io.h>
 #include <stdio.h>
@@ -37,8 +38,8 @@ int main(void)
 	DDRA = 0;
 	char volt[20];
 	char avg[20];
-	int max;
-	int min;
+	unsigned int max;
+	unsigned int min;
 	char max_str[20];
 	char min_str[20];
 	avr_init();
@@ -47,30 +48,58 @@ int main(void)
 	unsigned long sum = 0;
 	unsigned long count = 0;
 	
+	char reset_state = 0;
+	
 	while(1)
 	{
 	    lcd_clr();
 		int new_sample = get_sample();  // int value from 0-1023
 		max = compute_max(max);
 		sprintf(max_str, "%.2f", (max / 1023.0) * 5);
-		lcd_pos(1, 0);
-		lcd_puts2(max_str);
-		
+
 		min = compute_min(min);
 		sprintf(min_str, "%.2f", (min / 1023.0) * 5);
-		lcd_pos(1, 9);
-		lcd_puts2(min_str);
 		
+		sum += new_sample;
+		sprintf(avg, "%.2f", ((sum / ++count) / 1023.0) * 5);
+		
+		// instantaneous voltage
     	sprintf(volt, "%.2f", (new_sample / 1023.0) * 5);
 		lcd_pos(0, 0);
 		lcd_puts2(volt);
 		
-		sum += new_sample;
-		sprintf(avg, "%.2f", ((sum / ++count) / 1023.0) * 5);
-		lcd_pos(0, 9);
-		lcd_puts2(avg);
+		if (get_key() == 4)
+		{
+			reset_state = !reset_state;
+		}
 		
-	    avr_wait(500);
+		if (!reset_state)
+		{
+			// max
+			lcd_pos(1, 0);
+			lcd_puts2(max_str);
+		
+			// min
+			lcd_pos(1, 9);
+			lcd_puts2(min_str);
+		
+			// avg
+			lcd_pos(0, 9);
+			lcd_puts2(avg);	
+			avr_wait(1000);
+		} else {
+			lcd_pos(1, 0);
+			lcd_puts2("---");
+			max = new_sample;
+			lcd_pos(1, 9);
+			lcd_puts2("---");
+			min = new_sample;
+			lcd_pos(0, 9);
+			lcd_puts2("---");
+			sum = 0;
+			count = 0;
+			avr_wait(500);
+		}
 	}
 }
 
