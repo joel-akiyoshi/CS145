@@ -1,0 +1,14 @@
+Project 4: Volt-meter
+
+Components:
+- ATMEGA32 microcontroller
+- LCD screen
+- 4 x 4 keypad
+- Resistors & wires
+- Voltage Regulator
+- 9V Battery
+- 8 mHz crystal
+- Programmer
+
+Description:
+The main purpose of this project is designing a volt-meter that displays our parameters: instantaneous, max, min, and average voltage. Upon start up, the LCD will display the four parameters based on the voltage being read through port PA0. Pressing the A button on the keypad would "reset" the volt-meter and stop displaying the min, max, and average voltages. Another press of the A button resumes the volt-meter LCD to display min, max, and average.
