@@ -8,6 +8,8 @@ lcd.c
 
 main.c
 
+photoresistor.c
+
 puzzle.c
 
 speaker.c

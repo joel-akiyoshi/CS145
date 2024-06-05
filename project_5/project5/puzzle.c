@@ -148,6 +148,7 @@ int checkAns(Equation eq, int ans)
 	else
 	{
 		lcd_puts2("Try again.");
+		avr_wait(10000);
 		return 0;
 	}
 }

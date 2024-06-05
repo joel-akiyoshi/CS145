@@ -154,6 +154,12 @@
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="photoresistor.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="photoresistor.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="puzzle.c">
       <SubType>compile</SubType>
     </Compile>

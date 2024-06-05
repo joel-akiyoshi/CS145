@@ -37,6 +37,8 @@ int keys[] = {1, 2, 3, 10,
 			  7, 8, 9, 10,
 		     10, 0, 10, 10};
 
+
+
 int main(void)
 {
 	lcd_init();
@@ -44,39 +46,66 @@ int main(void)
 	lcd_pos(0,0);
 	Equation savedEq;
 	int attempt = 0;
+	int correct = 0;
 	
     while (1) 
     {
-		Equation eq = randomEq(); //continuously randomized
+		int new_sample = get_sample();
 		
-		if (get_key() == 16) //D to display
+		if (new_sample > 400) //D to display
 		{
-			lcd_clr();
-			if (attempt == 0) //first attempt => new question
+			while(!correct)
 			{
-				savedEq = eq;
-			}
-			printEq(savedEq); //display equation
-			int ans = getAns(); //get user answer
-			int correct = checkAns(savedEq, ans); //check answer
-			if (correct)
-			{
-				avr_wait(20000);
+				Equation eq = randomEq(); //continuously randomized
+				
 				lcd_clr();
-			} else
-			{
-				if (attempt == 0)
+				if (attempt == 0) //first attempt => new question
 				{
-					attempt = 1;
-				} else //if attempt == 1
+					savedEq = eq;
+				}
+				printEq(savedEq); //display equation
+				int ans = getAns(); //get user answer
+			
+				correct = checkAns(savedEq, ans); //check answer
+				if (correct)
 				{
-					attempt = 0;
+					avr_wait(20000);
+					lcd_clr();
+					// stop speaker noise
+				} else
+				{
+					if (attempt == 0)
+					{
+						attempt = 1;
+					} else //if attempt == 1
+					{
+						attempt = 0;
+					}
 				}
 			}
-	
+			correct = 0;
 		}
 		
 		avr_wait(2500);
     }
 }
+
+
+// int main(void)
+// {
+// 	lcd_init();
+// 	lcd_clr();
+// 	char light[20];
+// 	
+// 	while(1)
+// 	{
+// 		int new_sample = get_sample();
+// 		sprintf(light, "%u", new_sample);
+// 		lcd_pos(0, 0);
+// 		lcd_puts2(light);
+// 		
+// 		avr_wait(2000);
+// 	}
+// 
+// }
 
