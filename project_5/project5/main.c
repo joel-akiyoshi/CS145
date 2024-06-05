@@ -61,7 +61,8 @@ int main(void)
 			int correct = checkAns(savedEq, ans); //check answer
 			if (correct)
 			{
-				break;
+				avr_wait(20000);
+				lcd_clr();
 			} else
 			{
 				if (attempt == 0)
@@ -77,8 +78,5 @@ int main(void)
 		
 		avr_wait(2500);
     }
-	
-	avr_wait(20000);
-	lcd_clr();
 }
 
