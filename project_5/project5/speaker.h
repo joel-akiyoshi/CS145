@@ -22,6 +22,8 @@ typedef struct
 
 void play_song(const PlayingNote song[], int length);
 void play_note(const PlayingNote* note);
+void play(PlayingNote note);
+void stop_playing();
 
 
 #endif /* _SPEAKER_H */

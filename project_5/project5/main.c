@@ -6,7 +6,7 @@
  */ 
 
 #include "avr.h"
-//#include "speaker.h"
+#include "speaker.h"
 #include "keypad.h"
 #include "lcd.h"
 #include "puzzle.h"
@@ -47,16 +47,21 @@ int main(void)
 	Equation savedEq;
 	int attempt = 0;
 	int correct = 0;
+	PlayingNote alarm_noise = {A, W};
+	SET_BIT(DDRA, 1);
 	
     while (1) 
     {
+		Equation eq = randomEq(); //continuously randomized
 		int new_sample = get_sample();
 		
 		if (new_sample > 400) //D to display
 		{
+			play(alarm_noise);
+			
 			while(!correct)
 			{
-				Equation eq = randomEq(); //continuously randomized
+				//Equation eq = randomEq(); //continuously randomized
 				
 				lcd_clr();
 				if (attempt == 0) //first attempt => new question
@@ -71,7 +76,8 @@ int main(void)
 				{
 					avr_wait(20000);
 					lcd_clr();
-					// stop speaker noise
+					stop_playing();
+					
 				} else
 				{
 					if (attempt == 0)
@@ -90,22 +96,4 @@ int main(void)
     }
 }
 
-
-// int main(void)
-// {
-// 	lcd_init();
-// 	lcd_clr();
-// 	char light[20];
-// 	
-// 	while(1)
-// 	{
-// 		int new_sample = get_sample();
-// 		sprintf(light, "%u", new_sample);
-// 		lcd_pos(0, 0);
-// 		lcd_puts2(light);
-// 		
-// 		avr_wait(2000);
-// 	}
-// 
-// }
 

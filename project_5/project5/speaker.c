@@ -7,6 +7,8 @@
 
 #include "avr.h"
 #include "speaker.h"
+#include <avr/interrupt.h>
+
 
 const double THTL[] = {22.73, //A
 					   21.45, //As
@@ -64,35 +66,48 @@ void play_note(const PlayingNote* note)
 	k = note->duration / period[note->note];
 	for (i = 0; i < k; ++i)
 	{
-		SET_BIT(PORTB, 3);
+		SET_BIT(PORTA, 1);
 		avr_wait(THTL[note->note]);
-		CLR_BIT(PORTB, 3);
+		CLR_BIT(PORTA, 1);
 		avr_wait(THTL[note->note]);
 	}
 }
 
-void play_song(const PlayingNote song[], int length)
-{
-	int i;
-	for (i = 0; i < length; ++i)
-	{
-		if (get_key() == 4)
-		{
-			pause_song();
-		}
-		play_note(&song[i]);
-	}
+#include "speaker.h"
+
+
+void play(PlayingNote note) {
+	// Set PA1 as output
+	DDRA |= (1 << PA1);
+
+	// Calculate the timer compare match value for the desired frequency
+	unsigned int compare_match_value = 300;
+
+	TCCR1A = 0;  // Normal port operation
+	TCCR1B = (1 << WGM12) | (1 << CS11) | (1 << CS10);  // CTC mode, Prescaler = 64
+	OCR1A = compare_match_value;  // Set compare match value
+
+	// Enable Timer1 compare match A interrupt
+	TIMSK |= (1 << OCIE1A);
+
+	// Enable global interrupts
+	sei();
 }
 
-void pause_song()  // until A is pressed again
-{
-	while(1)
-	{
-		//CLR_BIT(PORTB, 3);
-		if (get_key() == 8)
-		{
-			//SET_BIT(PORTB, 3);
-			break;
-		}
-	}
+void stop_playing(void) {
+	// Disable Timer1 compare match A interrupt
+	TIMSK &= ~(1 << OCIE1A);
+
+	// Set PA1 to low
+	PORTA &= ~(1 << PA1);
+
+	// Reset Timer1 configuration
+	TCCR1A = 0;
+	TCCR1B = 0;
+}
+
+// Timer1 compare match A interrupt service routine
+ISR(TIMER1_COMPA_vect) {
+	// Toggle PA1
+	PORTA ^= (1 << PA1);
 }
