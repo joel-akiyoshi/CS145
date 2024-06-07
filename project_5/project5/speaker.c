@@ -80,11 +80,10 @@ void play(PlayingNote note) {
 	// Set PA1 as output
 	DDRA |= (1 << PA1);
 
-	// Calculate the timer compare match value for the desired frequency
 	unsigned int compare_match_value = 300;
 
 	TCCR1A = 0;  // Normal port operation
-	TCCR1B = (1 << WGM12) | (1 << CS11) | (1 << CS10);  // CTC mode, Prescaler = 64
+	TCCR1B = (1 << WGM12) | (1 << CS11) | (1 << CS10);
 	OCR1A = compare_match_value;  // Set compare match value
 
 	// Enable Timer1 compare match A interrupt
