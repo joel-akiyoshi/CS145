@@ -1,0 +1,23 @@
+Project 5: Math Puzzle Integrated Photoresistor Alarm Clock
+Joel Akiyoshi and Chan Young Ji
+
+Components:
+- ATMEGA32 microcontroller
+- LCD screen
+- 4 x 4 keypad
+- Resistors & wires
+- Voltage Regulator
+- 9V Battery
+- 8 mHz crystal
+- Speaker
+- Photoresistor
+- Programmer
+
+Description:
+Our project is an alarm that will activate when a sufficient amount of light reaches a light sensor (simulating sunlight in the morning). To make sure the user is awake when they turn off the alarm, the only way to deactivate the alarm is to correctly solve a simple math problem, displayed on the LCD interface. The user will input their answer using the keypad, and upon failing two attempts, a new question will be generated. When the alarm stops, it will need to be turned on again before the light sensor will trigger the alarm (otherwise, it will continuously go off during the day). The ON/OFF functionality will be controlled by the “A” key.
+
+We will construct a User Interface on the LCD, prompting the user to enter their answer, and informing them of a success or failure. The math problems will be relatively simple, only using addition and multiplication, and single digit positive integers (to avoid negative values and floating point arithmetic). Order of operations will be taken into account. The problems will be randomly generated, and we will write an “arithmetic checker” algorithm to verify the user’s input.
+
+Example of math problem (as displayed on LCD):
+7 + 8 * 3  = ?
+Ans: 31 (expected user input)
